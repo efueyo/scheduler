@@ -74,7 +74,9 @@ api_manager.getData(function(data){
 var scheduler = new Scheduler(1000); // 1 call per 1000ms
 scheduler.start();
 printData = function(data){
-  console.log("Data is: " + data);
+  console.log("Data is:");
+  console.log(data);
+  
 }
 scheduler.enqueue(api_manager.getData,printData);
 scheduler.enqueue(api_manager.getMoreData,printData);
@@ -89,13 +91,13 @@ This is just the first structure.
 2. Validations. What happens if you enqueue something that is not a function?
 3. Error handling. What happens if your function crashes?
 4. Functinality to get statistics:
-··1. When will a function be executed?
-··2. How many elements are in the queue?
+  1. When will a function be executed?
+  2. How many elements are in the queue?
 5. More funcionalities
-··1. Priorities
-··2. Remove enqueued functions
-··3. Change execution interval
-··3. Change execution interval
+  1. Priorities
+  2. Remove enqueued functions
+  3. Change execution interval
+  3. Change execution interval
 6. NPM publish
 
 
