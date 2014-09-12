@@ -87,6 +87,7 @@ scheduler.enqueue(api_manager.getOtherData,printData);
 ### TODO
 
 This is just the first structure.
+
 1. Tests
 2. Validations. What happens if you enqueue something that is not a function?
 3. Error handling. What happens if your function crashes?
