@@ -12,7 +12,7 @@ but you can enqueue many functions and they will be executed in order at a
 certain rate.
 
 ## Usage:
-  ```
+  ```javascript
   scheduler = new Scheduler(1000); //call functions every 1sec
   scheduler.enqueue(function(){
     console.log(new Date());
@@ -39,7 +39,7 @@ to the whole API, not just per endpoint.
 
 * Rate limit is 1 call/sec
 
-```
+```javascript
 var scheduler = new Scheduler(1000); // 1 call each 1000ms
 var api_manager = new RestrictedApiManager({user:'me',pass:'secret');
 
