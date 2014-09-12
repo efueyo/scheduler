@@ -96,7 +96,7 @@ This is just the first structure.
   2. How many elements are in the queue?
 5. More funcionalities
   1. Priorities
-  2. Remove enqueued functions
+  2. Remove enqueued function
   3. Change execution interval
   3. Change execution interval
 6. NPM publish
