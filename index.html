@@ -31,37 +31,122 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="scheduler-module" class="anchor" href="#scheduler-module"><span class="octicon octicon-link"></span></a>Scheduler Module</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>It has 3 porpuses:</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<ol>
+<li>Start using github and contribute to open source.</li>
+<li>Learn how to publish something to npm. (TODO)</li>
+<li>Become something usefull?. (TODO)</li>
+</ol><p>Essentially it's a queue where you can push functions to be processed
+at a certain interval. Actually the functions are  not called periodically
+but you can enqueue many functions and they will be executed in order at a
+certain rate.</p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage:</h2>
+
+<div class="highlight highlight-javascript"><pre>  <span class="nx">scheduler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Scheduler</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span> <span class="c1">//call functions every 1sec</span>
+  <span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>
+  <span class="p">});</span>
+  <span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">());</span>
+  <span class="p">});</span> 
+  <span class="c1">//Now with arguments</span>
+  <span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">([</span>
+   <span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">){</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'First argument is:'</span> <span class="o">+</span> <span class="nx">arg1</span><span class="p">);</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Second argument is:'</span> <span class="o">+</span> <span class="nx">arg2</span><span class="p">);</span>
+   <span class="p">},</span>
+   <span class="mi">2</span><span class="p">,</span><span class="s1">'hi!'</span><span class="p">])</span>
+  <span class="nx">scheduler</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+</pre></div>
+
+<h2>
+<a name="use-cases" class="anchor" href="#use-cases"><span class="octicon octicon-link"></span></a>Use cases</h2>
+
+<h4>
+<a name="external-api-rate-limit" class="anchor" href="#external-api-rate-limit"><span class="octicon octicon-link"></span></a>External API Rate Limit</h4>
+
+<p>Imagine you must use a certain API for many things, but the limit is imposed
+to the whole API, not just per endpoint.</p>
+
+<ul>
+<li>Rate limit is 1 call/sec</li>
+</ul><div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">scheduler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Scheduler</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span> <span class="c1">// 1 call each 1000ms</span>
+<span class="kd">var</span> <span class="nx">api_manager</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RestrictedApiManager</span><span class="p">({</span><span class="nx">user</span><span class="o">:</span><span class="s1">'me'</span><span class="p">,</span><span class="nx">pass</span><span class="o">:</span><span class="s1">'secret'</span><span class="p">);</span>
+
+<span class="c1">//This could be rate limited</span>
+<span class="nx">api_manager</span><span class="p">.</span><span class="nx">getData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">api_manager</span><span class="p">.</span><span class="nx">getMoreData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data2</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data2</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">api_manager</span><span class="p">.</span><span class="nx">getOtherData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data3</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data3</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">//This won't be rate limited but it is awful</span>
+<span class="kd">var</span> <span class="nx">rate_limit_delay</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="nx">api_manager</span><span class="p">.</span><span class="nx">getData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data</span><span class="p">);</span>
+  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">api_manager</span><span class="p">.</span><span class="nx">getMoreData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data2</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data2</span><span class="p">);</span>
+      <span class="nx">setTimeout</span><span class="p">(</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">api_manager</span><span class="p">.</span><span class="nx">getOtherData</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data3</span><span class="p">){</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is"</span><span class="o">:</span> <span class="nx">data3</span><span class="p">);</span>
+        <span class="p">});</span> <span class="c1">//getOtherData</span>
+      <span class="p">},</span><span class="nx">rate_limit_delay</span><span class="p">);</span>
+    <span class="p">});</span> <span class="c1">//getMoreData</span>
+  <span class="p">},</span><span class="nx">rate_limit_delay</span><span class="p">);</span>
+<span class="p">});</span> <span class="c1">//getData</span>
+
+<span class="c1">//This looks better</span>
+<span class="kd">var</span> <span class="nx">scheduler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Scheduler</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span> <span class="c1">// 1 call per 1000ms</span>
+<span class="nx">scheduler</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+<span class="nx">printData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Data is:"</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+
+<span class="p">}</span>
+<span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="nx">api_manager</span><span class="p">.</span><span class="nx">getData</span><span class="p">,</span><span class="nx">printData</span><span class="p">);</span>
+<span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="nx">api_manager</span><span class="p">.</span><span class="nx">getMoreData</span><span class="p">,</span><span class="nx">printData</span><span class="p">);</span>
+<span class="nx">scheduler</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="nx">api_manager</span><span class="p">.</span><span class="nx">getOtherData</span><span class="p">,</span><span class="nx">printData</span><span class="p">);</span>
+
+</pre></div>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>This is just the first structure.</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<ol>
+<li>Tests</li>
+<li>Validations. What happens if you enqueue something that is not a function?</li>
+<li>Error handling. What happens if your function crashes?</li>
+<li>Functinality to get statistics:
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<ol>
+<li>When will a function be executed?</li>
+<li>How many elements are in the queue?</li>
+</ol>
+</li>
+<li>More funcionalities
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ol>
+<li>Priorities</li>
+<li>Remove enqueued function</li>
+<li>Change execution interval</li>
+<li>Change execution interval</li>
+</ol>
+</li>
+<li>NPM publish</li>
+</ol>
       </section>
     </div>
 
